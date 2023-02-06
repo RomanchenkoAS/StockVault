@@ -1,4 +1,6 @@
-cs50
-Flask
-Flask-Session
+Library name    -   Command to install
+
+cs50                $ sudo apt install python3-pip   -> $ pip3 install cs50
+Flask               $ sudo apt install python3-flask
+Flask-Session       $ pip install flask-session
 requests

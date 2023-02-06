@@ -5,6 +5,7 @@ import json
 from cs50 import SQL
 # To install: $ sudo apt install python3-flask
 from flask import Flask, flash, redirect, render_template, render_template_string, request, session, jsonify
+# pip install flask-session
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
