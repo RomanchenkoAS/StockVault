@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Apology
+{% endblock %}
+
+{% block main %}
+
+{% if top == 410 %}
+    <!-- code is 410 -->
+    <a href="/">
+        <img alt="buy_meme" class="border img-fluid" src="/static/img/memes/nas_vi.jpg" style="height:650px; width:575px">
+    </a>
+
+{% elif top == 411 %}
+    <!-- code is 411 -->
+    <a href="/">
+        <img alt="sell_meme" class="border img-fluid" src="/static/img/memes/damn_i_killed_myself.jpg">
+    </a>
+
+{% else %}
+    <!-- https://memegen.link/ -->
+    <a href="/">
+        <img alt="{{ top }}" class="border img-fluid" src="http://memegen.link/custom/{{ top | urlencode }}/{{ bottom | urlencode }}.jpg?alt=https://i.imgur.com/CsCgN7Ll.png&width=400" title="{{ top }}">
+    </a>
+
+{% endif %}
+
+
+
+{% endblock %}

@@ -1,0 +1,408 @@
+{% extends "layout.html" %}
+
+{% block link %}
+
+<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+{% endblock %}
+
+{% block title %}
+Quote
+{% endblock %}
+
+{% block main %}
+
+<section class="mt-5" style="background-color: #fff;">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-1 mb-2 ">
+                        <div class="row justify-content-center">
+                            <div class="col-md-5 col-lg-5 col-xl-10" style="margin-top: auto; margin-bottom: auto;">
+                                <!-- Form for submitting search -->
+                                <form id="quote-form" class="mt-4 mb-4 row g-3 justify-content-center" action="/quote"
+                                    method="post">
+                                    <div class="col-auto mt-0">
+                                        <input type="text" class="form-control" name="symbol"
+                                            style="width:300px" id="symbol"
+                                            placeholder="Type in stock symbol (e.g. MSFT)" autofocus>
+                                    </div>
+                                    <div class="col-auto mt-0">
+                                        <button type="submit_search" class="btn btn-primary">Search</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {% if quote %}
+                        <!-- stock quotations here -->
+                        <span class="h3">{{quote['name']}}</span>
+                        <span class="h3"> ({{quote['symbol']}})</span>
+                        <br>
+                        <span class="h1" id="price">{{quote['price_usd']}}</span>
+                        <span class="h3" id="change_symbol">+</span> <span id="change"
+                            style="display:none">{{quote['change']}}</span>
+                        <span class="h3" id="change_value">{{quote['change']}}$ ({{quote['change_percent']}})</span>
+                        <hr
+                            style="height:3px; color:gray; background-color:gray; width:60%; margin-left:auto; margin-right:auto;">
+                        <span>Currently in stock portfolio: </span> <span id="in_portfolio">{{quantity}}</span>
+                        <form id="trade_form" action="/trade" method="post">
+                            <!-- Choosing quantity -->
+                            <div class="center">
+                                <p>
+                                </p>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button style="width:40px" type="button" class="btn btn-danger btn-number"
+                                            data-type="minus" data-field="quantity">
+                                            -
+                                        </button>
+                                    </span>
+                                    <!-- This field allows only 0-9 and '-' (onkeypress event) -->
+                                    <input type="text" name="quantity" id="quantity" class="form-control" value=""
+                                        placeholder="0" min="-10000" max="10000"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode==45">
+                                    <span class="input-group-btn">
+                                        <button style="width:40px" type="button" class="btn btn-success btn-number"
+                                            data-type="plus" data-field="quantity">
+                                            +
+                                        </button>
+                                    </span>
+                                    <span>
+                                        <button style="width:40px; color: grey" type="button"
+                                            class="btn btn-neutral btn-number" data-type="zero" data-field="quantity">
+                                            X
+                                        </button>
+                                    </span>
+                                </div>
+                                <p></p>
+                            </div>
+                            <div class="h2">
+                                <span>Total: </span><span id="total_value">0</span><span>$</span>
+                                <!-- Hidden fields for submitting form: symbol / price -->
+                                <input style="display:none" id="price" name="price" value='{{quote["price"]}}'>
+                                <input style="display:none" id="symbol" name="symbol" value='{{quote["symbol"]}}'>
+                            </div>
+                            <button type="submit" class="btn btn-primary" form="trade_form" name="submit"
+                                id="trade_button">Quote</button>
+                        </form>
+
+                        <!-- Container for data (quote) -->
+                        <div id="quote-container" data-quote='{{quote|tojson|safe}}'></div>
+
+                        {% endif %}
+
+                        {% if error %}
+                        <p>Error occured: {{error}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+<!-- Section for S&P 500 top 50 papers -->
+<section class="mb-2 mt-3" style="background-color: #fff;">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-1 mb-2 ">
+                        <div class="row justify-content-center">
+                            <div class="col-md-5 col-lg-5 col-xl-10" style="margin-top: auto; margin-bottom: auto;">
+
+                                <h1 style="text-align:center" class="mt-2">Top 25 of S&P 500</h1>
+                                <hr
+                                    style="height:3px; color:gray; background-color:gray; width:72%; margin-left:auto; margin-right:auto;">
+                                <!-- For relevant info on S&P500 https://www.slickcharts.com/sp500 -->
+                                <table style="margin-left:auto; margin-right:auto">
+                                    <thead>
+                                        <tr>
+                                            <th class="">#</th>
+                                            <th class="">Company name</th>
+                                            <th class="" style="width:5rem;">Symbol</th>
+                                            <th class="">Latest price</th>
+                                            <th class="">Price change</th>
+                                            <th>% change</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body">
+                                        <!-- Contents will be managed by JS -->
+                                    </tbody>
+                                </table>
+                                <div class="spinner spinner-large" style="display:block; margin-top:1rem;"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Container for API-key data -->
+<div id="key-container" data-key='{{api_key}}'></div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+    // Making quote variable (passed here from flask) avaliable in JS context
+    // Use jQuery to pull it from data container
+    var quote = $("#quote-container").data("quote");
+
+    // Take api_key from container
+    const apiKey = $("#key-container").data("key");
+
+    const spinners = document.querySelectorAll(".spinner");
+
+    // Formatter for $
+    let currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        });
+
+    addEventListener('DOMContentLoaded', (event) => {
+        // If trade form is shown
+        if (document.getElementById("trade_form") != null) {
+            // pick the color of the change indicator, depending on the value
+            if (quote.change >= 0) {
+                document.getElementById("change_symbol").innerHTML = "+";
+                document.getElementById("change_symbol").style.color = 'green';
+                document.getElementById("change_value").style.color = 'green';
+            } else {
+                document.getElementById("change_symbol").innerHTML = "";
+                document.getElementById("change_symbol").style.color = 'red';
+                document.getElementById("change_value").style.color = 'red';
+            };
+        };
+
+        // Show Top25
+        fetch("static/top25.txt")
+            .then(response => response.text())
+            .then(text => {
+                // Array strings holds symbols of top 25 items
+                let strings = text.split("\n");
+
+                // Generate HTML table rows for each string
+                const rows = strings.map(str => `
+                <tr>
+                    <td id="${str}-pos"></td>
+                    <td><a id="${str}-name" href="/quote?symbol=${str}" class="link"></a></td>
+                    <td id="${str}"><a href="/quote?symbol=${str}" class="link link-symbol" >${str}</a></td>
+                    <td id="${str}-price"></td>
+                    <td id="${str}-change"></td>
+                    <td id="${str}-percent-change"></td>
+                </tr>`).join("");
+
+
+                let promises = [];
+                // Take symbol of each element and send it to the lookup function
+                strings.forEach((element, index) => {
+                    //Make a request
+                    promises.push(lookupAsync(element));
+                });
+
+                // When all responses are loaded and processed (which means when .all(promises) are fullfilled)
+                Promise.all(promises).then(responses => {
+                    // Insert the HTML table rows into the table body
+                    document.getElementById("table-body").innerHTML = rows;
+
+                    // Stop all the spinner animations
+                    if (spinners) {
+                        spinners.forEach(spinner => {
+                            spinner.style.display = 'none';
+                        });
+                    };
+
+                    // With given responses:
+                    responses.forEach((data, index) => {
+                        // Show position in the table
+                        $(document.getElementById(data.symbol + "-pos")).text(index + 1);
+
+                        // Fill table fields with contents
+                        $(document.getElementById(data.symbol + "-name")).text(data.companyName);
+                        $(document.getElementById(data.symbol + "-price")).text(currencyFormatter.format(data.latestPrice));
+
+                        let change = document.getElementById(data.symbol + "-change");
+                        let sign = '';
+                        if (data.change >= 0) {
+                            sign = '+';
+                        }
+                        $(change).text(`${sign}${currencyFormatter.format(data.change)}`);
+
+                        let percentChange = document.getElementById(data.symbol + "-percent-change");
+                        $(percentChange).text(`(${sign}${(data.changePercent * 100).toFixed(2)}%)`);
+
+                        // Set color for change fields
+                        if (data.change >= 0) {
+                            change.style.color = 'green';
+                            percentChange.style.color = 'green';
+                        } else {
+                            change.style.color = 'red';
+                            percentChange.style.color = 'red';
+                        };
+                    });
+                });
+
+            })
+            .catch(error => console.error(error));
+
+    });
+
+    // for making structurized request like /quote?symbol=MSFT
+    const quoteForm = document.getElementById("quote-form");
+    const symbolInput = document.getElementById("symbol");
+
+    quoteForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        quoteForm.action = "/quote?symbol=" + symbolInput.value;
+        quoteForm.submit();
+    });
+
+    function recount(value) {
+        // Renew total price when a button is pressed or input field is changed
+        var price = parseFloat(quote.price);
+        let total = value * price;
+        // Round up to fixed number of digits
+        // If price < $1 show more decimals
+        if (Math.abs(total) > 1) {
+            total = total.toFixed(2);
+        } else if (Math.abs(total) < 1 && Math.abs(total) > 0) {
+            total = total.toFixed(4);
+        } else if (total == 0) {
+            total = 0;
+        };
+        document.getElementById("total_value").innerHTML = total;
+        //document.getElementById("total").value = total;
+    };
+
+    // Event manager for clicking +/- buttons
+    $('.btn-number').click(function (e) {
+        e.preventDefault();
+        fieldName = $(this).attr('data-field');
+
+        type = $(this).attr('data-type');
+        var input = $("input[name='" + fieldName + "']");
+        var currentVal = parseInt(input.val());
+
+        // If the field is empty at click - set it to zero
+        if (isNaN(currentVal)) {
+            input.val(0);
+            currentVal = parseInt(input.val());
+        };
+
+        if (type == 'minus') {
+
+            if (currentVal > input.attr('min')) {
+                input.val(currentVal - 1).change();
+            }
+            if (parseInt(input.val()) == input.attr('min')) {
+                $(this).attr('disabled', true);
+            }
+
+        } else if (type == 'plus') {
+
+            if (currentVal < input.attr('max')) {
+                input.val(currentVal + 1).change();
+            }
+            if (parseInt(input.val()) == input.attr('max')) {
+                $(this).attr('disabled', true);
+            }
+
+        } else if (type == 'zero') {
+            input.val(0).change();
+        };
+        // Recount and change TOTAL value
+        recount(parseInt(input.val()));
+    });
+
+    // Honestly no idea what's this for, bit afraid to touch
+    $('.input-number').focusin(function () {
+        $(this).data('oldValue', $(this).val());
+    });
+
+    $('.input-number').change(function () {
+        // Event manager for changing input field
+        minValue = parseInt($(this).attr('min'));
+        maxValue = parseInt($(this).attr('max'));
+        valueCurrent = parseInt($(this).val());
+
+        console.log('im here, value = ' + valueCurrent);
+
+        name = $(this).attr('name');
+        if (valueCurrent >= minValue) {
+            $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+        } else {
+            alert('Sorry, the minimum value was reached');
+            $(this).val($(this).data('oldValue'));
+        }
+        if (valueCurrent <= maxValue) {
+            $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+        } else {
+            alert('Sorry, the maximum value was reached');
+            $(this).val($(this).data('oldValue'));
+        }
+
+        // Recount and change TOTAL value
+        input = document.getElementById("quantity");
+        recount(parseInt(input.value));
+    });
+
+    $(".input-number").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            // let it happen, don't do anything
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        };
+
+    });
+
+    // Create an event for enter press & prevent default behaviour
+    var form = document.getElementById("trade_form");
+
+    if (form != null) { // if trade form is already shown
+        form.addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                // Recount and change TOTAL value
+                input = document.getElementById("quantity");
+                recount(parseInt(input.value));
+            };
+        });
+    };
+
+    // For building top25 table
+    // Using async/await to handle the fetch request and json parse
+    async function lookupAsync(symbol) {
+        // Contact API
+        const url = `https://cloud.iexapis.com/stable/stock/${encodeURIComponent(symbol)}/quote?token=${apiKey}`;
+        try {
+            let response = await fetch(url);
+            if (!response.ok) throw new Error(response.statusText);
+            let data = await response.json();
+            // From this function we recieve a JSON 'data' containing all the info about 'symbol' stock
+            return data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+</script>
+
+
+{% endblock %}

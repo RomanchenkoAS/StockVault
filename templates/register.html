@@ -1,0 +1,214 @@
+{% extends "layout.html"%}
+
+{% block title%}
+Sign Up
+{% endblock %}
+
+{% block main %}
+
+<section class="mb-2 mt-5" style="background-color: #fff;">
+    <div class="container">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-12 col-xl-11">
+          <div class="card text-black" style="border-radius: 25px;">
+            <div class="card-body p-md-1">
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1" style="margin-top: auto; margin-bottom: auto;">
+
+                  <p class="text-center h1 fw-bold mb-3 mx-1 mx-md-4 mt-4">Sign up</p>
+                  <!-- Start of an actual form -->
+                  <form class="mx-1 mx-md-4" action="/register" method="post">
+
+                    <div class="d-flex flex-row align-items-center">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <label class="form-label" for="usename">Your Name:</label>
+                        <input autofocus autocomplete='off' type="text" id="usename" name="username" class="form-control" />
+                        <label class="form-label warning" style="visibility:hidden" id="namefield_warning" for="usename">Username already taken</label>
+                      </div>
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center">
+                      <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <label class="form-label" for="password">Password:</label>
+                        <input type="password" id="password" name="password" class="form-control" />
+                        <label class="form-label warning" style="visibility:hidden" id="password_warning" for="password">Password is insecure</label>
+                      </div>
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center">
+                      <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-3">
+                        <label class="form-label" for="password-conf">Repeat your password:</label>
+                        <input type="password" id="password_conf" class="form-control" name="confirmation"/>
+                        <label class="form-label warning" style="visibility:hidden" id="password_conf_warning" for="password_conf">Passwords don't match</label>
+                      </div>
+                    </div>
+
+                    <!-- Terms of use
+                    <div class="form-check d-flex justify-content-center mb-3">
+                      <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                      <label class="form-check-label" for="form2Example3">
+                        I agree all statements in <a href="#!">Terms of service</a>
+                      </label>
+                    </div> -->
+
+                    <div class="d-flex justify-content-center mx-4 mb-4 mb-lg-4">
+                      <button type="submit" id="submit_button" class="btn btn-primary btn-lg disabled">Register</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                  <img src="static/img/logo_full.png"
+                    class="img-fluid">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+  // Variables to check if form is ready
+  name_complete = new Boolean(false);
+  passw_complete = new Boolean(false);
+
+  //control password fields
+  var password = document.getElementById("password");
+  var password_conf = document.getElementById("password_conf");
+  var p1 = "0";
+  var p2 = "1";
+
+  //for the first password field
+  password.addEventListener("input", function() {
+    p1 = password.value;
+    if (p1 != p2) {
+      // if passwords match
+      password.className = "form-control input-img-cross";
+      password_conf.className = "form-control input-img-cross";
+      document.getElementById("password_conf_warning").style.visibility = "visible";
+      passw_complete = false;
+      disable();
+    }
+    else {
+      password.className = "form-control input-img-tick";
+      password_conf.className = "form-control input-img-tick";
+      document.getElementById("password_conf_warning").style.visibility = "hidden";
+      passw_complete = true;
+      enable();
+    };
+
+    // if length is not enough give warning
+    if (p1.length < 6) {
+      password.className = "form-control input-img-cross";
+      password_conf.className = "form-control input-img-cross";
+      document.getElementById("password_warning").style.visibility = "visible";
+      passw_complete = false;
+      disable();
+    }
+    else {
+      document.getElementById("password_warning").style.visibility = "hidden";
+    };
+  });
+
+  // for password confirmation
+  password_conf.addEventListener("input", function() {
+    p2 = password_conf.value;
+    if (p1 != p2) {
+      password.className = "form-control input-img-cross";
+      password_conf.className = "form-control input-img-cross";
+      document.getElementById("password_conf_warning").style.visibility = "visible";
+      passw_complete = false;
+      disable();
+    }
+    else {
+      document.getElementById("password_conf_warning").style.visibility = "hidden";
+      if (p1.length > 5) {
+        password.className = "form-control input-img-tick";
+        password_conf.className = "form-control input-img-tick";
+        passw_complete = true;
+        enable();
+      };
+    };
+  });
+
+  // Using AJAX to check if the name is avaliable whenever a letter is typed in
+  let namefield = document.getElementById("usename")
+  namefield.addEventListener("input", function() {
+    input = namefield.value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/check-username", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({username: namefield.value}));
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.available && proper_name(input) && containsSpecialSymbols(input) == false) {
+                // username is avaliable
+                namefield.className = "form-control input-img-tick";
+                document.getElementById("namefield_warning").style.visibility = "visible";
+                document.getElementById("namefield_warning").style.color = "#198754";
+                document.getElementById("namefield_warning").innerHTML = "Username avaliable";
+                name_complete = true;
+                enable();
+            }
+            else {
+                // username is not avaliable
+                namefield.className = "form-control input-img-cross";
+                document.getElementById("namefield_warning").style.visibility = "visible";
+                document.getElementById("namefield_warning").style.color = "#842029";
+                document.getElementById("namefield_warning").innerHTML = "Username unavaliable";
+                if (response.available == false) {
+                  document.getElementById("namefield_warning").innerHTML = "Username taken";
+                };
+                name_complete = false;
+                disable();
+            };
+        };
+    };
+
+  });
+
+  function enable() {
+    // Enabling the button
+    if (name_complete == true && passw_complete == true) {
+      document.getElementById('submit_button').classList.remove('disabled');
+    };
+  };
+
+  function disable() {
+    // Disabling the button
+    document.getElementById('submit_button').classList.add('disabled');
+  };
+
+  function containsSpecialSymbols(str) {
+    //Check if username contain special symbols
+    var symbols = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    return symbols.test(str);
+  };
+
+
+  function proper_name(name) {
+    //Check if username is long enough
+    if (name.length > 3) {
+      return true;
+    }
+    else {
+      return false;
+    };
+  };
+
+</script>
+
+{% endblock %}

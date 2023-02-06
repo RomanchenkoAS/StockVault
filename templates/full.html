@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <title>StockVault - Full info</title>
+
+    </head>
+
+    <body>
+
+
+
+        <table style="text-align: center;">
+            <thead >
+                <tr>
+                    <th>#</th>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Value
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in quote %}
+                {% set position = loop.index %}
+                        <tr >
+                            <td>{{ position }}</td>
+                            <td >{{ item }}<td>
+                            <td>{{ quote[item] }} </td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+    </body>
+
+</html>
