@@ -1,6 +1,6 @@
 # StockVault
 
-- This app is developed for CS50 course -
+- This app is developed for CS50 course
 
 StockVault is a stock "trading" app. A registered user recieves $10.000 virtual cash for trading. Though cash is virtual, the prices are real and are constantly refreshed via IEX API (https://iexcloud.io/).
 
