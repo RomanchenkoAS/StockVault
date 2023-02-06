@@ -14,6 +14,6 @@ Features:
 - HISTORY - simply lists all the buy/sell actions on the current user account with all relevant information
 
 -REQUIREMENTS-
-In order for this app to properly get prices from IEX API and api-key is required
+In order for this app to properly get prices from IEX API an api-key is required
 On app start-up it is taken from "static/api_key.txt"
 If this key doesn't - it means a free license is overdue and a new one is required. 
