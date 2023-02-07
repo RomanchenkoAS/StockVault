@@ -288,7 +288,8 @@ def register():
             return apology("Passwords don't match", 400)
 
         # Username already in use
-        rows = db.execute('SELECT * FROM USERS WHERE username LIKE ("?")', uname)
+        rows = db.execute(
+            'SELECT * FROM USERS WHERE username LIKE ("?")', uname)
         if len(rows) != 0:
             return apology("Username already in use", 400)
 
@@ -328,7 +329,7 @@ def check_username():
 @app.route("/success")
 def success():
     """Show register success page"""
-    if request.method =="POST":        
+    if request.method == "POST":
         return render_template("success.html")
     else:
         return redirect("/")
