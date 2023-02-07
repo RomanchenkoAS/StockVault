@@ -7,41 +7,49 @@ from flask import redirect, render_template, request, session
 from functools import wraps
 
 # A tool to replace cs50 library SQL
+
+
 class database():
     def __init__(self, route):
         # Setting up the route || create object with X = database("route")
         self.path = route
-    
+
     def execute(self, clause, *args):
         # Check correct usage
         if len(args) != clause.count("?"):
             # Wrong number of ? / args
             return 1
-        
+
         # Replace every ? in clause with argument
         for item in args:
             substitution = str(item)
             clause = clause.replace("?", substitution, 1)
-        
-        
+
         # Connect to the database file
         conn = sqlite3.connect(self.path)
-        
+
         # Create a cursor for the DB
         cursor = conn.cursor()
-        
+
         # Execute given clause
         cursor.execute(clause)
-        
+
+        # Get column names
+        column_names = [column[0] for column in cursor.description]
+
         # Get results
         rows = cursor.fetchall()
-        
+
+        # Convert rows to a list of dictionaries
+        result = []
+        for row in rows:
+            result.append(dict(zip(column_names, row)))
+
         # Commit changes and close connection
         conn.commit()
         conn.close()
 
-        return rows
-        
+        return result
 
 
 def apology(message, code=400):
@@ -140,7 +148,8 @@ def usd(value):
 def count_stocks(database, user_id, symbol):
     """Count how many of particular stock a user has in portfolio"""
     # Get all relevant orders from this user
-    orders = database.execute("SELECT * FROM orders WHERE user_id=? AND symbol=?", user_id, symbol)
+    orders = database.execute(
+        "SELECT * FROM orders WHERE user_id=? AND symbol=?", user_id, symbol)
 
     quantity = 0
     # For each order, add volume of the order to the total quality (+ for buy || - for sell)

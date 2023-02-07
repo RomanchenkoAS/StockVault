@@ -7,5 +7,5 @@ row = db.execute('SELECT * FROM users WHERE id=?;', userid)
 
 print(row)
 
-username = row[0][1]
+username = row[0]["username"]
 print(username)
