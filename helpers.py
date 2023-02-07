@@ -149,7 +149,7 @@ def count_stocks(database, user_id, symbol):
     """Count how many of particular stock a user has in portfolio"""
     # Get all relevant orders from this user
     orders = database.execute(
-        "SELECT * FROM orders WHERE user_id=? AND symbol=?", user_id, symbol)
+        'SELECT * FROM orders WHERE user_id=? AND symbol="?"', user_id, symbol)
 
     quantity = 0
     # For each order, add volume of the order to the total quality (+ for buy || - for sell)
