@@ -26,7 +26,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Configure db variable as class "database"
+# Configure db variable as an object of "database" class
 db = database('finance.db')
 
 # Get API key from file (this file should be excluded from version control)
