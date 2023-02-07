@@ -33,24 +33,37 @@ class database():
             # Execute given clause
             cursor.execute(clause)
 
-            # Get column names
-            print('cursor.description:')
-            print(cursor.description)
-            column_names = [column[0] for column in cursor.description]
+            if getfirstword(clause) == "SELECT":
+                # Get column names
+                column_names = [column[0] for column in cursor.description]
+    
+                # Get results
+                rows = cursor.fetchall()
+    
+                # Convert rows to a list of dictionaries
+                result = []
+                for row in rows:
+                    result.append(dict(zip(column_names, row)))
+    
+                # Commit changes and close connection
+                conn.commit()
+    
+                return result
+            
+            else:
+                # Commit changes and close connection
+                conn.commit()
+                
+                return 0
 
-            # Get results
-            rows = cursor.fetchall()
 
-            # Convert rows to a list of dictionaries
-            result = []
-            for row in rows:
-                result.append(dict(zip(column_names, row)))
-
-            # Commit changes and close connection
-            conn.commit()
-
-            return result
-
+def getfirstword(string):
+    result = ""
+    for char in string:
+        if char != " ":
+            result += char
+        else:
+            return result.upper()
 
 def apology(message, code=400):
     """Render message as an apology to user."""
