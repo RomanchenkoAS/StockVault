@@ -12,7 +12,18 @@ class database():
         # Setting up the route || create object with X = database("route")
         self.path = route
     
-    def execute(self, clause):
+    def execute(self, clause, *args):
+        # Check correct usage
+        if len(args) != clause.count("?"):
+            # Wrong number of ? / args
+            return 1
+        
+        # Replace every ? in clause with argument
+        for item in args:
+            substitution = str(item)
+            clause = clause.replace("?", substitution, 1)
+        
+        
         # Connect to the database file
         conn = sqlite3.connect(self.path)
         
