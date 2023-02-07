@@ -18,7 +18,7 @@ app = Flask(__name__)
 # It should NOT be hardcoded or kept in version control, but since this is a study app, here goes..
 app.secret_key = 'yoursecretkey'
 
-# Custom filter (usage: {{ price|usd }})
+# Custom jinja filter (usage: {{ price|usd }})
 app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -29,7 +29,7 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///finance.db")
 
-# Get API key from file (again this should be excluded from version control)
+# Get API key from file (this file should be excluded from version control)
 with open("static/api_key.txt", "r") as f:
     os.environ['API_KEY'] = f.read().strip()
 
