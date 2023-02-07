@@ -28,3 +28,6 @@ StockVault is a stock "trading" app. A registered user recieves $10.000 virtual 
 
 # Requirements
 - In order for this app to properly get prices from IEX API an api-key is required. On app start-up it is taken from "static/api_key.txt". If it doesn't work - it means a free license is overdue and a new one is required. 
+- CS50 library    ($ sudo apt install python3-pip -> $ pip3 install cs50)
+- Flask           ($ sudo apt install python3-flask)
+- Flask-Session   ($ pip install flask-session)
