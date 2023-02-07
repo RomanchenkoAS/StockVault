@@ -6,15 +6,14 @@ import sqlite3
 from flask import redirect, render_template, request, session
 from functools import wraps
 
-# A tool to replace cs50 library SQL
-
-
 class database():
+    '''Class for database object that allows to execute sql clauses'''
     def __init__(self, route):
         # Setting up the route || create object with X = database("route")
         self.path = route
 
     def execute(self, clause, *args):
+        '''Execution of clause database.execute("clause", *args) -- each argument replaces a ? sign in the clause'''
         # Check correct usage
         if len(args) != clause.count("?"):
             # Wrong number of ? / args
@@ -217,15 +216,3 @@ def get_portfolio(database, user_id):
     # print(portfolio)
 
     return portfolio
-
-# Dont need this anymore, it is implemented in JavaScript
-
-
-def calculate_current_value(portfolio):
-    """With given portfolio, calculate its current value"""
-
-    value = 0
-    for item in portfolio:
-        value += lookup(item['symbol'])['price'] * item['quantity']
-
-    return value

@@ -2,7 +2,7 @@ import os
 import json
 
 # To install: $ sudo apt install python3-pip   -> $ pip3 install cs50
-from cs50 import SQL
+# from cs50 import SQL -- NOT REQUIRED ANYMORE
 # To install: $ sudo apt install python3-flask
 from flask import Flask, flash, redirect, render_template, render_template_string, request, session, jsonify
 # pip install flask-session
@@ -106,7 +106,7 @@ def login():
             return apology("must provide password", 400)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?",
+        rows = db.execute('SELECT * FROM users WHERE username = "?"',
                           request.form.get("username"))
 
         # Ensure username exists and password is correct
@@ -288,12 +288,12 @@ def register():
             return apology("Passwords don't match", 400)
 
         # Username already in use
-        rows = db.execute('SELECT * FROM USERS WHERE username LIKE (?)', uname)
+        rows = db.execute('SELECT * FROM USERS WHERE username LIKE ("?")', uname)
         if len(rows) != 0:
             return apology("Username already in use", 400)
 
         # Insert a new user into database
-        db.execute("INSERT INTO users (username, hash) VALUES (?,?)", uname,
+        db.execute("INSERT INTO users (username, hash) VALUES ('?','?')", uname,
                    generate_password_hash(passw, method='pbkdf2:sha256', salt_length=8))
 
         # Show success page
@@ -311,7 +311,7 @@ def check_username():
     username = data["username"]
     # Find out if username exists in the database
     # Query database for username
-    rows = db.execute("SELECT * FROM users WHERE username = ?", username)
+    rows = db.execute("SELECT * FROM users WHERE username = '?'", username)
 
     # Check length of the list, if username exists - list is not empty
     if len(rows) != 0:
