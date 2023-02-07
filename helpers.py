@@ -6,8 +6,10 @@ import sqlite3
 from flask import redirect, render_template, request, session
 from functools import wraps
 
+
 class database():
     '''Class for database object that allows to execute sql clauses'''
+
     def __init__(self, route):
         # Setting up the route || create object with X = database("route")
         self.path = route
@@ -35,24 +37,24 @@ class database():
             if getfirstword(clause) == "SELECT":
                 # Get column names
                 column_names = [column[0] for column in cursor.description]
-    
+
                 # Get results
                 rows = cursor.fetchall()
-    
+
                 # Convert rows to a list of dictionaries
                 result = []
                 for row in rows:
                     result.append(dict(zip(column_names, row)))
-    
+
                 # Commit changes and close connection
                 conn.commit()
-    
+
                 return result
-            
+
             else:
                 # Commit changes and close connection
                 conn.commit()
-                
+
                 return 0
 
 
@@ -63,6 +65,7 @@ def getfirstword(string):
             result += char
         else:
             return result.upper()
+
 
 def apology(message, code=400):
     """Render message as an apology to user."""
@@ -213,6 +216,4 @@ def get_portfolio(database, user_id):
             portfolio.append(item)
 
     # After portfolio is full and ready
-    # print(portfolio)
-
     return portfolio
