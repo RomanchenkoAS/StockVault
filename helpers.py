@@ -1,9 +1,36 @@
 import os
 import requests
 import urllib.parse
+import sqlite3
 
 from flask import redirect, render_template, request, session
 from functools import wraps
+
+# A tool to replace cs50 library SQL
+class database():
+    def __init__(self, route):
+        # Setting up the route || create object with X = database("route")
+        self.path = route
+    
+    def execute(self, clause):
+        # Connect to the database file
+        conn = sqlite3.connect(self.path)
+        
+        # Create a cursor for the DB
+        cursor = conn.cursor()
+        
+        # Execute given clause
+        cursor.execute(clause)
+        
+        # Get results
+        rows = cursor.fetchall()
+        
+        # Commit changes and close connection
+        conn.commit()
+        conn.close()
+
+        return rows
+        
 
 
 def apology(message, code=400):
