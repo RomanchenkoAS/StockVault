@@ -136,7 +136,6 @@ def logout():
     return redirect("/")
 
 
-
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
@@ -329,4 +328,17 @@ def check_username():
 @app.route("/success")
 def success():
     """Show register success page"""
-    return render_template("success.html")
+    if request.method =="POST":        
+        return render_template("success.html")
+    else:
+        return redirect("/")
+
+
+@app.route("/buy")
+def buy():
+    return apology("", 410)
+
+
+@app.route("/sell")
+def sell():
+    return apology("", 411)
