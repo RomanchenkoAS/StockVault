@@ -2,8 +2,10 @@ from helpers import database
 
 db = database('finance.db')
 
+clause = 'insert into users '
+
 userid = 10
-row = db.execute('SELECT * FROM users WHERE id=?;', userid)
+row = db.execute(clause, userid)
 
 print(row)
 

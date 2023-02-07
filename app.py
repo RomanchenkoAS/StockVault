@@ -248,7 +248,7 @@ def trade():
             return apology('Not enough in portfolio to sell')
 
         # Making a trade (creating a row in database)
-        db.execute("INSERT INTO orders (user_id, symbol, price, quantity, action, cash_before, cash_after) VALUES (?,?,?,?,?,?,?)",
+        db.execute('INSERT INTO orders (user_id, symbol, price, quantity, action, cash_before, cash_after) VALUES (?,"?",?,?,"?",?,?)',
                    user_id, symbol, price, quantity, action, cash_before, cash_after)
         # Update cash in session and database
         session['cash'] = cash_after

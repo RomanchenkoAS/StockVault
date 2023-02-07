@@ -26,30 +26,30 @@ class database():
             clause = clause.replace("?", substitution, 1)
 
         # Connect to the database file
-        conn = sqlite3.connect(self.path)
+        with sqlite3.connect(self.path) as conn:
+            # Create a cursor for the DB
+            cursor = conn.cursor()
 
-        # Create a cursor for the DB
-        cursor = conn.cursor()
+            # Execute given clause
+            cursor.execute(clause)
 
-        # Execute given clause
-        cursor.execute(clause)
+            # Get column names
+            print('cursor.description:')
+            print(cursor.description)
+            column_names = [column[0] for column in cursor.description]
 
-        # Get column names
-        column_names = [column[0] for column in cursor.description]
+            # Get results
+            rows = cursor.fetchall()
 
-        # Get results
-        rows = cursor.fetchall()
+            # Convert rows to a list of dictionaries
+            result = []
+            for row in rows:
+                result.append(dict(zip(column_names, row)))
 
-        # Convert rows to a list of dictionaries
-        result = []
-        for row in rows:
-            result.append(dict(zip(column_names, row)))
+            # Commit changes and close connection
+            conn.commit()
 
-        # Commit changes and close connection
-        conn.commit()
-        conn.close()
-
-        return result
+            return result
 
 
 def apology(message, code=400):
