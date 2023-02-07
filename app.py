@@ -28,8 +28,12 @@ Session(app)
 
 # Configure db variable as an object of "database" class
 db = database('finance.db')
+# For my production server on PythonAnywhere
+# db = database('/home/Gamagamagama/StockVault/finance.db')
 
 # Get API key from file (this file should be excluded from version control)
+# For my production server on PythonAnywhere
+# with open("/home/Gamagamagama/StockVault/static/api_key.txt", "r") as f:
 with open("static/api_key.txt", "r") as f:
     os.environ['API_KEY'] = f.read().strip()
 
