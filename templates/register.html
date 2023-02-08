@@ -1,69 +1,82 @@
-{% extends "layout.html"%}
-
-{% block title%}
-Sign Up
-{% endblock %}
-
+{% extends "layout.html" %}
+{% block title %}Sign Up{% endblock title %}
 {% block main %}
-
-<section class="mb-2 mt-5" style="background-color: #fff;">
+  <section class="mb-2 mt-5" style="background-color: #fff;">
     <div class="container">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-12 col-xl-11">
           <div class="card text-black" style="border-radius: 25px;">
             <div class="card-body p-md-1">
               <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1" style="margin-top: auto; margin-bottom: auto;">
-
+                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1"
+                     style="margin-top: auto;
+                            margin-bottom: auto">
                   <p class="text-center h1 fw-bold mb-3 mx-1 mx-md-4 mt-4">Sign up</p>
                   <!-- Start of an actual form -->
                   <form class="mx-1 mx-md-4" action="/register" method="post">
-
                     <div class="d-flex flex-row align-items-center">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <label class="form-label" for="usename">Your Name:</label>
-                        <input autofocus autocomplete='off' type="text" id="usename" name="username" class="form-control" />
-                        <label class="form-label warning" style="visibility:hidden" id="namefield_warning" for="usename">Username already taken</label>
+                        <input autofocus
+                               autocomplete='off'
+                               type="text"
+                               id="usename"
+                               name="username"
+                               class="form-control"/>
+                        <label class="form-label warning"
+                               style="visibility:hidden"
+                               id="namefield_warning"
+                               for="usename">
+                          Username already taken
+                        </label>
                       </div>
                     </div>
-
                     <div class="d-flex flex-row align-items-center">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <label class="form-label" for="password">Password:</label>
                         <input type="password" id="password" name="password" class="form-control" />
-                        <label class="form-label warning" style="visibility:hidden" id="password_warning" for="password">Password is insecure</label>
+                        <label class="form-label warning"
+                               style="visibility:hidden"
+                               id="password_warning"
+                               for="password">
+                          Password is insecure
+                        </label>
                       </div>
                     </div>
-
                     <div class="d-flex flex-row align-items-center">
                       <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-3">
                         <label class="form-label" for="password-conf">Repeat your password:</label>
-                        <input type="password" id="password_conf" class="form-control" name="confirmation"/>
-                        <label class="form-label warning" style="visibility:hidden" id="password_conf_warning" for="password_conf">Passwords don't match</label>
+                        <input type="password"
+                               id="password_conf"
+                               class="form-control"
+                               name="confirmation"/>
+                        <label class="form-label warning"
+                               style="visibility:hidden"
+                               id="password_conf_warning"
+                               for="password_conf">
+                          Passwords don't match
+                        </label>
                       </div>
                     </div>
-
                     <!-- Terms of use
                     <div class="form-check d-flex justify-content-center mb-3">
                       <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
                       <label class="form-check-label" for="form2Example3">
                         I agree all statements in <a href="#!">Terms of service</a>
                       </label>
-                    </div> -->
-
+</div> -->
                     <div class="d-flex justify-content-center mx-4 mb-4 mb-lg-4">
-                      <button type="submit" id="submit_button" class="btn btn-primary btn-lg disabled">Register</button>
+                      <button type="submit"
+                              id="submit_button"
+                              class="btn btn-primary btn-lg disabled">Register</button>
                     </div>
                   </form>
                 </div>
                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
-                  <img src="static/img/logo_full.png"
-                    class="img-fluid">
-
+                  <img src="static/img/logo_full.png" class="img-fluid">
                 </div>
               </div>
             </div>
@@ -72,12 +85,9 @@ Sign Up
       </div>
     </div>
   </section>
-
-{% endblock %}
-
+{% endblock main %}
 {% block script %}
-
-<script>
+  <script>
 
   // Variables to check if form is ready
   name_complete = new Boolean(false);
@@ -209,6 +219,5 @@ Sign Up
     };
   };
 
-</script>
-
-{% endblock %}
+  </script>
+{% endblock script %}
