@@ -1,7 +1,7 @@
 import os
 import json
 
-# To install: $ sudo apt install python3-flask
+# To install flask: $ sudo apt install python3-flask
 
 # opted out render_template_string
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
