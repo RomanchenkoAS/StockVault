@@ -1,156 +1,185 @@
 {% extends "layout.html" %}
-
 {% block link %}
-
-<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-{% endblock %}
-
-{% block title %}
-Quote
-{% endblock %}
-
+    <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+{% endblock link %}
+{% block title %}Quote{% endblock title %}
 {% block main %}
-
-<section class="mt-5" style="background-color: #fff;">
-    <div class="container">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-lg-12 col-xl-11">
-                <div class="card text-black" style="border-radius: 25px;">
-                    <div class="card-body p-md-1 mb-2 ">
-                        <div class="row justify-content-center">
-                            <div class="col-md-5 col-lg-5 col-xl-10" style="margin-top: auto; margin-bottom: auto;">
-                                <!-- Form for submitting search -->
-                                <form id="quote-form" class="mt-4 mb-4 row g-3 justify-content-center" action="/quote"
-                                    method="post">
-                                    <div class="col-auto mt-0">
-                                        <input type="text" class="form-control" name="symbol"
-                                            style="width:300px" id="symbol"
-                                            placeholder="Type in stock symbol (e.g. MSFT)" autofocus>
-                                    </div>
-                                    <div class="col-auto mt-0">
-                                        <button type="submit_search" class="btn btn-primary">Search</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        {% if quote %}
-                        <!-- stock quotations here -->
-                        <span class="h3">{{quote['name']}}</span>
-                        <span class="h3"> ({{quote['symbol']}})</span>
-                        <br>
-                        <span class="h1" id="price">{{quote['price_usd']}}</span>
-                        <span class="h3" id="change_symbol">+</span> <span id="change"
-                            style="display:none">{{quote['change']}}</span>
-                        <span class="h3" id="change_value">{{quote['change']}}$ ({{quote['change_percent']}})</span>
-                        <hr
-                            style="height:3px; color:gray; background-color:gray; width:60%; margin-left:auto; margin-right:auto;">
-                        <span>Currently in stock portfolio: </span> <span id="in_portfolio">{{quantity}}</span>
-                        <form id="trade_form" action="/trade" method="post">
-                            <!-- Choosing quantity -->
-                            <div class="center">
-                                <p>
-                                </p>
-                                <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <button style="width:40px" type="button" class="btn btn-danger btn-number"
-                                            data-type="minus" data-field="quantity">
-                                            -
-                                        </button>
-                                    </span>
-                                    <!-- This field allows only 0-9 and '-' (onkeypress event) -->
-                                    <input type="text" name="quantity" id="quantity" class="form-control" value=""
-                                        placeholder="0" min="-10000" max="10000"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode==45">
-                                    <span class="input-group-btn">
-                                        <button style="width:40px" type="button" class="btn btn-success btn-number"
-                                            data-type="plus" data-field="quantity">
-                                            +
-                                        </button>
-                                    </span>
-                                    <span>
-                                        <button style="width:40px; color: grey" type="button"
-                                            class="btn btn-neutral btn-number" data-type="zero" data-field="quantity">
-                                            X
-                                        </button>
-                                    </span>
+    <section class="mt-5" style="background-color: #fff;">
+        <div class="container">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-1 mb-2 ">
+                            <div class="row justify-content-center">
+                                <div class="col-md-5 col-lg-5 col-xl-10"
+                                     style="margin-top: auto;
+                                            margin-bottom: auto">
+                                    <!-- Form for submitting search -->
+                                    <form id="quote-form"
+                                          class="mt-4 mb-4 row g-3 justify-content-center"
+                                          action="/quote"
+                                          method="post">
+                                        <div class="col-auto mt-0">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   name="symbol"
+                                                   style="width:300px"
+                                                   id="symbol"
+                                                   placeholder="Type in stock symbol (e.g. MSFT)"
+                                                   autofocus>
+                                        </div>
+                                        <div class="col-auto mt-0">
+                                            <button type="submit_search" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <p></p>
                             </div>
-                            <div class="h2">
-                                <span>Total: </span><span id="total_value">0</span><span>$</span>
-                                <!-- Hidden fields for submitting form: symbol / price -->
-                                <input style="display:none" id="price" name="price" value='{{quote["price"]}}'>
-                                <input style="display:none" id="symbol" name="symbol" value='{{quote["symbol"]}}'>
-                            </div>
-                            <button type="submit" class="btn btn-primary" form="trade_form" name="submit"
-                                id="trade_button">Quote</button>
-                        </form>
-
-                        <!-- Container for data (quote) -->
-                        <div id="quote-container" data-quote='{{quote|tojson|safe}}'></div>
-
-                        {% endif %}
-
-                        {% if error %}
-                        <p>Error occured: {{error}}</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-</section>
-
-<!-- Section for S&P 500 top 50 papers -->
-<section class="mb-2 mt-3" style="background-color: #fff;">
-    <div class="container">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-lg-12 col-xl-11">
-                <div class="card text-black" style="border-radius: 25px;">
-                    <div class="card-body p-md-1 mb-2 ">
-                        <div class="row justify-content-center">
-                            <div class="col-md-5 col-lg-5 col-xl-10" style="margin-top: auto; margin-bottom: auto;">
-
-                                <h1 style="text-align:center" class="mt-2">Top 25 of S&P 500</h1>
-                                <hr
-                                    style="height:3px; color:gray; background-color:gray; width:72%; margin-left:auto; margin-right:auto;">
-                                <!-- For relevant info on S&P500 https://www.slickcharts.com/sp500 -->
-                                <table style="margin-left:auto; margin-right:auto">
-                                    <thead>
-                                        <tr>
-                                            <th class="">#</th>
-                                            <th class="">Company name</th>
-                                            <th class="" style="width:5rem;">Symbol</th>
-                                            <th class="">Latest price</th>
-                                            <th class="">Price change</th>
-                                            <th>% change</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="table-body">
-                                        <!-- Contents will be managed by JS -->
-                                    </tbody>
-                                </table>
-                                <div class="spinner spinner-large" style="display:block; margin-top:1rem;"></div>
-
+                            {% if quote %}
+                                <!-- stock quotations here -->
+                                <span class="h3">{{ quote['name'] }}</span>
+                                <span class="h3">({{ quote['symbol'] }})</span>
+                                <br>
+                                <span class="h1" id="price">{{ quote['price_usd'] }}</span>
+                                <span class="h3" id="change_symbol">+</span> <span id="change" style="display:none">{{ quote['change'] }}</span>
+                                <span class="h3" id="change_value">{{ quote['change'] }}$ ({{ quote['change_percent'] }})</span>
+                                <hr style="height:3px;
+                                           color:gray;
+                                           background-color:gray;
+                                           width:60%;
+                                           margin-left:auto;
+                                           margin-right:auto">
+                                <span>Currently in stock portfolio:</span> <span id="in_portfolio">{{ quantity }}</span>
+                                <form id="trade_form" action="/trade" method="post">
+                                    <!-- Choosing quantity -->
+                                    <div class="center">
+                                        <p></p>
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button style="width:40px"
+                                                        type="button"
+                                                        class="btn btn-danger btn-number"
+                                                        data-type="minus"
+                                                        data-field="quantity">
+                                                    -
+                                                </button>
+                                            </span>
+                                            <!-- This field allows only 0-9 and '-' (onkeypress event) -->
+                                            <input type="text"
+                                                   name="quantity"
+                                                   id="quantity"
+                                                   class="form-control"
+                                                   value=""
+                                                   placeholder="0"
+                                                   min="-10000"
+                                                   max="10000"
+                                                   onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode==45">
+                                                <span class="input-group-btn">
+                                                    <button style="width:40px"
+                                                            type="button"
+                                                            class="btn btn-success btn-number"
+                                                            data-type="plus"
+                                                            data-field="quantity">
+                                                        +
+                                                    </button>
+                                                </span>
+                                                <span>
+                                                    <button style="width:40px;
+                                                                   color: grey"
+                                                            type="button"
+                                                            class="btn btn-neutral btn-number"
+                                                            data-type="zero"
+                                                            data-field="quantity">
+                                                        X
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <p></p>
+                                        </div>
+                                        <div class="h2">
+                                            <span>Total:</span><span id="total_value">0</span><span>$</span>
+                                            <!-- Hidden fields for submitting form: symbol / price -->
+                                            <input style="display:none"
+                                                   id="price"
+                                                   name="price"
+                                                   value='{{ quote["price"] }}'>
+                                            <input style="display:none"
+                                                   id="symbol"
+                                                   name="symbol"
+                                                   value='{{ quote["symbol"] }}'>
+                                        </div>
+                                        <button type="submit"
+                                                class="btn btn-primary"
+                                                form="trade_form"
+                                                name="submit"
+                                                id="trade_button">Quote</button>
+                                    </form>
+                                    <!-- Container for data (quote) -->
+                                    <div id="quote-container" data-quote='{{ quote|tojson|safe }}'></div>
+                                {% endif %}
+                                {% if error %}<p>Error occured: {{ error }}</p>{% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
+            <!-- Section for S&P 500 top 50 papers -->
+            <section class="mb-2 mt-3" style="background-color: #fff;">
+                <div class="container">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-lg-12 col-xl-11">
+                            <div class="card text-black" style="border-radius: 25px;">
+                                <div class="card-body p-md-1 mb-2 ">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-5 col-lg-5 col-xl-10"
+                                             style="margin-top: auto;
+                                                    margin-bottom: auto">
+                                            <h1 style="text-align:center" class="mt-2">Top 25 of S&P 500</h1>
+                                            <hr style="height:3px;
+                                                       color:gray;
+                                                       background-color:gray;
+                                                       width:72%;
+                                                       margin-left:auto;
+                                                       margin-right:auto">
+                                            <!-- For relevant info on S&P500 https://www.slickcharts.com/sp500 -->
+                                            <table style="margin-left:auto; margin-right:auto">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="">#</th>
+                                                        <th class="">Company name</th>
+                                                        <th class="" style="width:5rem;">Symbol</th>
+                                                        <th class="">
+                                                            Latest price
+                                                        </th>
+                                                        <th class="">
+                                                            Price change
+                                                        </th>
+                                                        <th>
+                                                            % change
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="table-body">
+                                                    <!-- Contents will be managed by JS -->
+                                                </tbody>
+                                            </table>
+                                            <div class="spinner spinner-large" style="display:block; margin-top:1rem;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Container for API-key data -->
+            <div id="key-container" data-key='{{ api_key }}'>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Container for API-key data -->
-<div id="key-container" data-key='{{api_key}}'></div>
-
-{% endblock %}
-
-{% block script %}
-
-<script>
+        {% endblock main %}
+        {% block script %}
+            <script>
 
     // Making quote variable (passed here from flask) avaliable in JS context
     // Use jQuery to pull it from data container
@@ -194,7 +223,7 @@ Quote
                 <tr>
                     <td id="${str}-pos"></td>
                     <td><a id="${str}-name" href="/quote?symbol=${str}" class="link"></a></td>
-                    <td id="${str}"><a href="/quote?symbol=${str}" class="link link-symbol" >${str}</a></td>
+                    <td id="${str}"><a href="/quote?symbol=${str}" class="link link-symbol">${str}</a></td>
                     <td id="${str}-price"></td>
                     <td id="${str}-change"></td>
                     <td id="${str}-percent-change"></td>
@@ -402,7 +431,5 @@ Quote
     };
 
 
-</script>
-
-
-{% endblock %}
+            </script>
+        {% endblock script %}
