@@ -1,13 +1,12 @@
 import os
 import json
 
-# To install: $ sudo apt install python3-pip   -> $ pip3 install cs50
-# from cs50 import SQL -- NOT REQUIRED ANYMORE
 # To install: $ sudo apt install python3-flask
-from flask import Flask, flash, redirect, render_template, render_template_string, request, session, jsonify
+
+from flask import Flask, flash, redirect, render_template, request, session, jsonify # opted out render_template_string 
 # pip install flask-session
 from flask_session import Session
-from tempfile import mkdtemp
+# from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd, count_stocks, get_portfolio, database
