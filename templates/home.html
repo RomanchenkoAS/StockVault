@@ -1,117 +1,116 @@
-{% extends "layout.html"%}
-
-{% block title%}
-Home
+{% extends "layout.html" %}
+{% block title %}
+    Home
 {% endblock title %}
-
 <!-- To enable tooltips -->
-{% block link %}
-<script src="static/popper.min.js"></script>
-{% endblock %}
-
+{% block link %}<script src="static/popper.min.js"></script>{% endblock %}
 {% block main %}
-
-<!-- Cards -->
-<div style='display:flex;'>
-    <!-- Card for user data -->
-    <div class="card mt-2" style="width: 22rem; height:13rem; margin-right:0.5rem">
-        <div class="card-body pb-0 px-2">
-            <h5 class="card-title">Hello, {{user['username']}}
-                <a onclick="refresh()" style="cursor: pointer;">
-                    <img src="/static/img/refresh_icon.png">
-                </a>
-            </h5>
-            <ul class="" style="padding-left:1rem; margin-bottom:0;">
-                <li class="card-text" style="display: flex; height:3rem">
-                    <span style="text-align:left; flex:1;">Cash:</span>
-                    <span id="cash" class="h3"
-                        style="text-align:right; flex:1; font-weight:bold;">{{user['cash'] | usd}}</span>
-                </li>
-                <li class="card-text" style="display:flex; height:3rem">
-                    <span style="text-align:left; flex:1;">Portfolio:</span>
-                    <span id="portfolio" class="h3"
-                        style="text-align:right; flex:2; font-weight:bold;">
-                    </span>
-                    <div class="spinner" style="display:block"></div>
-                </li>
-                <hr style="margin:0; margin-bottom:1rem;">
-                <li class="card-text" style="display:flex;">
-                    <span style="text-align:left; flex:1;">Value:</span>
-                    <span id="value" class="h3" style="text-align:right; flex:2; font-weight:bold;"></span>
-                    <div class="spinner" style="display:block"></div>
-                </li>
-            </ul>
+    <!-- Cards -->
+    <div style="display:flex;">
+        <!-- Card for user data -->
+        <div class="card mt-2"
+             style="width: 22rem;
+                    height:13rem;
+                    margin-right:0.5rem">
+            <div class="card-body pb-0 px-2">
+                <h5 class="card-title">
+                    Hello, {{ user['username'] }}
+                    <a onclick="refresh()" style="cursor: pointer;">
+                        <img src="/static/img/refresh_icon.png">
+                    </a>
+                </h5>
+                <ul class="" style="padding-left:1rem; margin-bottom:0;">
+                    <li class="card-text" style="display: flex; height:3rem">
+                        <span style="text-align:left; flex:1;">Cash:</span>
+                        <span id="cash"
+                              class="h3"
+                              style="text-align:right;
+                                     flex:1;
+                                     font-weight:bold">{{ user['cash'] | usd }}</span>
+                    </li>
+                    <li class="card-text" style="display:flex; height:3rem">
+                        <span style="text-align:left; flex:1;">Portfolio:</span>
+                        <span id="portfolio"
+                              class="h3"
+                              style="text-align:right;
+                                     flex:2;
+                                     font-weight:bold"></span>
+                        <div class="spinner" style="display:block"></div>
+                    </li>
+                    <hr style="margin:0; margin-bottom:1rem;">
+                    <li class="card-text" style="display:flex;">
+                        <span style="text-align:left; flex:1;">Value:</span>
+                        <span id="value"
+                              class="h3"
+                              style="text-align:right;
+                                     flex:2;
+                                     font-weight:bold"></span>
+                        <div class="spinner" style="display:block"></div>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-
-
-    <div class="card mt-2 mb-2" style="width:100%">
-        <div class="card-body pb-0 px-2">
-
-            <h5 class="card-title h1">Your portfolio</h5>
-            <hr>
-
-            <table style="text-align:center; margin-left:auto; margin-right:auto">
-                <tbody>
-                    {% for item in portfolio %}
-                        <tr style="font-size: 25px;">
-                            <!-- LEFT -->
-                            <td id="{{item['symbol']}}-item" style="text-align:left">
-                                <a href="/quote?symbol={{item['symbol']}}" class="a-empty">
-                                    <span style="font-weight: bold;">{{item['symbol']}}</span>
-                                </a>
-                                <span style="font-weight: bold;"> • </span>
-                                <span style="font-size:18px"id="{{item['symbol']}}-companyName"></span>
-                                <br>
-                                <span style="color:grey; font-size:20px">{{item['quantity']}} • {{item['avg_price'] | usd}}</span>
-
-                                <!-- Dont need the horizontal rule for the last item -->
-                                {% if loop.index < (portfolio | length) %}
-                                    <hr style="width:125%; margin:0; height:1px;">
-                                {% endif %}
-
-                            </td>
-                            <!-- RIGHT -->
-                            <td style="text-align:right; width:120px">
-                                <span id="{{item['symbol']}}-price">Price</span>
-                                <br>
-                                <span id="{{item['symbol']}}-change" style="font-size:20px">Change</span>
-                            </td>
-                            <td>
-                                <!-- Sell button with a tooltip -->
-                                <button style="width:40px; color:grey; font-weight:bold;" type="sellAllButton"
-                                class="btn btn-number" id="{{item['symbol']}}-sell" data="{{item['symbol']}}"
-                                data-toggle="tooltip" title="Sell all for current price"
-                                data-placement="bottom"
-                                onclick='window.location.href = "/trade?symbol={{item["symbol"]}}&q=all";'>X</button>
-                            </td>
-                        </tr>
-
-                    {% endfor %}
-                </tbody>
-            </table>
-
+        <div class="card mt-2 mb-2" style="width:100%">
+            <div class="card-body pb-0 px-2">
+                <h5 class="card-title h1">Your portfolio</h5>
+                <hr>
+                <table style="text-align:center; margin-left:auto; margin-right:auto">
+                    <tbody>
+                        {% for item in portfolio %}
+                            <tr style="font-size: 25px;">
+                                <!-- LEFT -->
+                                <td id="{{ item['symbol'] }}-item" style="text-align:left">
+                                    <a href="/quote?symbol={{ item['symbol'] }}" class="a-empty">
+                                        <span style="font-weight: bold;">{{ item['symbol'] }}</span>
+                                    </a>
+                                    <span style="font-weight: bold;">•</span>
+                                    <span style="font-size:18px"id="{{ item['symbol'] }}-companyName"></span>
+                                    <br>
+                                    <span style="color:grey; font-size:20px">{{ item['quantity'] }} • {{ item['avg_price'] | usd }}</span>
+                                    <!-- Dont need the horizontal rule for the last item -->
+                                    {% if loop.index < (portfolio | length) %}
+                                        <hr style="width:125%; margin:0; height:1px;">
+                                    {% endif %}
+                                </td>
+                                <!-- RIGHT -->
+                                <td style="text-align:right; width:120px">
+                                    <span id="{{ item['symbol'] }}-price">Price</span>
+                                    <br>
+                                    <span id="{{ item['symbol'] }}-change" style="font-size:20px">Change</span>
+                                </td>
+                                <td>
+                                    <!-- Sell button with a tooltip -->
+                                    <button style="width:40px;
+                                                   color:grey;
+                                                   font-weight:bold"
+                                            type="sellAllButton"
+                                            class="btn btn-number"
+                                            id="{{ item['symbol'] }}-sell"
+                                            data="{{ item['symbol'] }}"
+                                            data-toggle="tooltip"
+                                            title="Sell all for current price"
+                                            data-placement="bottom"
+                                            onclick='window.location.href = "/trade?symbol={{ item["symbol"] }}&q=all";'>
+                                        X
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <!-- End of cards container -->
     </div>
-
-    <!-- End of cards container -->
-</div>
-
-<!-- Container for API-key data -->
-<div id="key-container" data-key='{{api_key}}'></div>
-
-<!-- Container for storing portfolio | it is passed as JSON object -->
-<div id="portfolio-container" data-portfolio='{{portfolio | tojson}}'></div>
-
-<!-- Container for user data -->
-<div id="user-container" data-user='{{user | tojson}}'></div>
-
-
+    <!-- Container for API-key data -->
+    <div id="key-container" data-key='{{ api_key }}'></div>
+    <!-- Container for storing portfolio | it is passed as JSON object -->
+    <div id="portfolio-container" data-portfolio='{{ portfolio | tojson }}'></div>
+    <!-- Container for user data -->
+    <div id="user-container" data-user='{{ user | tojson }}'></div>
 {% endblock %}
-
 {% block script %}
-
-<script>
+    <script>
 
     const loadingMessage = document.getElementById("loading-message");
     const results = document.getElementById("results");
@@ -251,6 +250,5 @@ Home
         }
     };
 
-</script>
-
+    </script>
 {% endblock %}
