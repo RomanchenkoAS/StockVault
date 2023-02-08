@@ -3,7 +3,8 @@ import json
 
 # To install: $ sudo apt install python3-flask
 
-from flask import Flask, flash, redirect, render_template, request, session, jsonify # opted out render_template_string 
+# opted out render_template_string
+from flask import Flask, flash, redirect, render_template, request, session, jsonify
 # pip install flask-session
 from flask_session import Session
 # from tempfile import mkdtemp
