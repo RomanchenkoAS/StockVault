@@ -75,7 +75,7 @@
                                 <!-- RIGHT -->
                                 <td style="text-align:right; width:120px">
                                     <span id="{{ item['symbol'] }}-price">Price</span>
-                                    <br>
+                                </br>
                                     <span id="{{ item['symbol'] }}-change" style="font-size:20px">Change</span>
                                 </td>
                                 <td>
@@ -108,7 +108,7 @@
     <div id="portfolio-container" data-portfolio='{{ portfolio | tojson }}'></div>
     <!-- Container for user data -->
     <div id="user-container" data-user='{{ user | tojson }}'></div>
-{% endblock %}
+{% endblock main %}
 {% block script %}
     <script>
 
@@ -251,4 +251,4 @@
     };
 
     </script>
-{% endblock %}
+{% endblock script %}
